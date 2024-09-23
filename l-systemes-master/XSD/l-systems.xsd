@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <xsd:annotation>
+    <xsd:documentation xml:lang="fr">
+      Schéma XML pour la réalisation d'un ensemble d'L-systèmes
+    </xsd:documentation>
+  </xsd:annotation>
+
+  <!-- Type Symbole -->
+  <xsd:simpleType name="Symbole">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Z]"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- Type Regle -->
+  <xsd:complexType name="Regle">
+    <xsd:simpleContent>
+      <xsd:extension base="Symbole">
+        <xsd:attribute name="image" type="Image" use="required"/>
+        <xsd:attribute name="commande" type="Commande" use="required"/>
+        <xsd:attribute name="angle" type="Angle" use="required"/>
+      </xsd:extension>
+    </xsd:simpleContent>
+  </xsd:complexType>
+
+  <!-- Type Angle -->
+  <xsd:simpleType name="Angle">
+    <xsd:restriction base="xsd:integer">
+      <xsd:minInclusive value="-180"/>
+      <xsd:maxInclusive value="180"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- Type Image -->
+  <xsd:simpleType name="Image">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="[A-Z\[\]]+"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- Type Commande -->
+  <xsd:simpleType name="Commande">
+    <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="LINE"/>
+      <xsd:enumeration value="MOVE"/>
+      <xsd:enumeration value="TURN"/>
+      <xsd:enumeration value="STORE"/>
+      <xsd:enumeration value="RESTORE"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- Type ID -->
+  <xsd:simpleType name="TypeID">
+    <xsd:restriction base="xsd:string">
+      <xsd:pattern value="LS[0-9]+"/>
+    </xsd:restriction>
+  </xsd:simpleType>
+
+  <!-- Type Lsystem -->
+  <xsd:complexType name="LSystem">
+    <xsd:sequence>
+      <xsd:element name="nom" type="xsd:string"/>
+      <xsd:element name="axiome">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="symbole" type="Symbole" maxOccurs="unbounded"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element ref="regles"/>
+    </xsd:sequence>
+    <xsd:attribute name="id" type="TypeID" use="required"/>
+  </xsd:complexType>
+
+  <!-- élément regles -->
+  <xsd:element name="regles">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="regle" type="Regle" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="uniciteRegleVal">
+      <xsd:selector xpath="regle"/>
+      <xsd:field xpath="."/>
+    </xsd:key>
+  </xsd:element>
+
+  <!-- élément lsystems -->
+  <xsd:element name="lsystems">
+    <xsd:complexType>
+      <xsd:sequence>
+        <xsd:element name="lsystem" type="LSystem" maxOccurs="unbounded"/>
+      </xsd:sequence>
+    </xsd:complexType>
+    <xsd:key name="uniciteLSystemID">
+      <xsd:selector xpath="lsystem"/>
+      <xsd:field xpath="@id"/>
+    </xsd:key>
+    <xsd:key name="uniqueLSystemName">
+    <xsd:selector xpath="lsystem/nom"/>
+    <xsd:field xpath="."/>
+  </xsd:key>
+  </xsd:element>
+
+</xsd:schema>
