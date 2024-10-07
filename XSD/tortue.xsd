@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:simpleType name="Angle">
+        <xsd:restriction base="xsd:integer">
+            <xsd:minInclusive value="-180"/>
+            <xsd:maxInclusive value="180"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="Command">
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="LINE"/>
+            <xsd:enumeration value="MOVE"/>
+            <xsd:enumeration value="TURN"/>
+            <xsd:enumeration value="STORE"/>
+            <xsd:enumeration value="RESTORE"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:complexType name="Action">
+        <xsd:attribute name = "command" type = "Command" use = "required"/>
+        <xsd:attribute name = "angle" type = "Angle" use = "optional"/>
+    </xsd:complexType>
+
+    <xsd:element name="tortue">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name = "action" type = "Action" minOccurs="1" maxOccurs="unbounded"/>
+            </xsd:sequence>
+            <xsd:attribute name = "name" type = "xsd:string"/>
+        </xsd:complexType>
+    </xsd:element>
+
+</xsd:schema>
